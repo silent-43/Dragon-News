@@ -2,49 +2,76 @@ import { createBrowserRouter } from "react-router";
 import HomeLayout from "../layouts/HomeLayout";
 import Home from "../pages/Home";
 import CategoryNews from "../pages/CategoryNews";
-import Bookmarks from "../components/Bookmarks";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import AuthLayout from "../layouts/AuthLayout";
+import NewsDetails from "../pages/NewsDetails";
+import PrivateRoute from "../provider/PrivateRoute";
+import Loading from "../pages/Loading";
+import About from "../pages/About";
+import Career from "../pages/Career";
+import QZoneDetails from "../pages/QZoneDetails";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomeLayout></HomeLayout>,
+    element: <HomeLayout />,
+    loader: () => fetch("/news.json"),
+
     children: [
       {
         path: "",
-        element: <Home></Home>,
+        element: <Home />,
       },
       {
         path: "/category/:id",
-        element: <CategoryNews></CategoryNews>,
+        element: <CategoryNews />,
         loader: () => fetch("/news.json"),
+        hydrateFallbackElement: <Loading />,
       },
     ],
   },
-  {
-    path: "/bookmarks",
-    element: <Bookmarks></Bookmarks>,
-  },
+
   {
     path: "/auth",
-    element: <AuthLayout></AuthLayout>,
+    element: <AuthLayout />,
     children: [
       {
         path: "/auth/login",
-        element: <Login></Login>,
+        element: <Login />,
       },
       {
         path: "/auth/register",
-        element: <Register></Register>,
+        element: <Register />,
       },
     ],
   },
+
   {
-    path: "/news",
-    element: <h2>News Layout</h2>,
+    path: "/news-details/:id",
+    element: (
+      <PrivateRoute>
+        <NewsDetails />
+      </PrivateRoute>
+    ),
+    loader: () => fetch("/news.json"),
+    hydrateFallbackElement: <Loading />,
   },
+
+  {
+    path: "/about",
+    element: <About />,
+  },
+
+  {
+    path: "/career",
+    element: <Career />,
+  },
+  {
+    path: "/q-zone/:id",
+    element: <QZoneDetails></QZoneDetails>,
+  },
+
   {
     path: "/*",
     element: <h2>Error 404</h2>,

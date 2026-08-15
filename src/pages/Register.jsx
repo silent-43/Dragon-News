@@ -1,9 +1,11 @@
-import React, { use } from "react";
-import { Link } from "react-router";
+import React, { use, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
-  const { createUser, setUser } = use(AuthContext);
+  const { createUser, setUser, updateUser } = use(AuthContext);
+  const [nameError, setNameError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -13,13 +15,28 @@ const Register = () => {
     const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
-    console.log({ name, photo, email, password });
+    // console.log({ name, photo, email, password });
+
+    if (name.length < 3) {
+      setNameError("Name should be more than 3 character...");
+      return;
+    } else {
+      setNameError("");
+    }
 
     createUser(email, password)
       .then((result) => {
         const user = result.user;
         // console.log(user);
-        setUser(user);
+        updateUser({ displayName: name, photoURL: photo })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: photo });
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error);
+            setUser(user);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -47,6 +64,7 @@ const Register = () => {
               placeholder="Name"
               required
             />
+            {nameError && <p className="text-xs text-error">{nameError}</p>}
 
             {/* photo url */}
             <label className="label">Photo URL</label>
@@ -82,11 +100,14 @@ const Register = () => {
               Register
             </button>
 
-            <p className="font-semibold text-center pt-5">
-              Already have an account?{" "}
-              <Link className="text-secondary" to="/auth/login">
-                login
-              </Link>{" "}
+            <p className="text-center pt-5 text-sm text-gray-600">
+              Already have an account?
+              <Link
+                to="/auth/login"
+                className="ml-2 inline-block px-4 py-1.5 bg-secondary text-white rounded-md font-semibold hover:bg-orange-600 transition duration-200"
+              >
+                Login
+              </Link>
             </p>
           </fieldset>
         </form>

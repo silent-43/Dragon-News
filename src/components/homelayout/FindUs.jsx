@@ -5,18 +5,40 @@ const FindUs = () => {
   return (
     <div>
       <h2 className="font-bold mb-5">Find Us On</h2>
-      <div className="">
-        <div className="join join-vertical w-full">
-          <button className="btn bg-base-100 join-item justify-start">
-            <FaFacebook></FaFacebook> Facebook
-          </button>
-          <button className="btn bg-base-100 join-item justify-start">
-            <FaLinkedin></FaLinkedin> Linkedin
-          </button>
-          <button className="btn bg-base-100 join-item justify-start">
-            <FaGithub></FaGithub> Github
-          </button>
-        </div>
+
+      <div className="join join-vertical w-full">
+        {/* Facebook */}
+        <a
+          href="https://www.facebook.com/karmokar.sohag/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn bg-base-100 join-item justify-start"
+        >
+          <FaFacebook />
+          Facebook
+        </a>
+
+        {/* LinkedIn */}
+        <a
+          href="https://www.linkedin.com/in/sohag-karmokar"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn bg-base-100 join-item justify-start"
+        >
+          <FaLinkedin />
+          LinkedIn
+        </a>
+
+        {/* GitHub */}
+        <a
+          href="https://github.com/silent-43"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn bg-base-100 join-item justify-start"
+        >
+          <FaGithub />
+          GitHub
+        </a>
       </div>
     </div>
   );

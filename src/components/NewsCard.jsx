@@ -7,43 +7,18 @@ import {
   FaEye,
 } from "react-icons/fa";
 import { format } from "date-fns";
+import { Link } from "react-router";
 
 const NewsCard = ({ news }) => {
-  const [showMore, setShowMore] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const [isBookmarked, setIsBookmarked] = useState(() => {
-    const savedBookmarks =
-      JSON.parse(localStorage.getItem("bookmarkedNews")) || [];
-
-    return savedBookmarks.some((item) => item._id === news._id);
-  });
-
-  const { title, author, image_url, rating, total_view, details } = news;
+  const { _id, title, author, image_url, rating, total_view, details } = news;
 
   const publishedDate = new Date(author.published_date);
 
-  // Bookmark
+  // Bookmark - Only UI change
   const handleBookmark = () => {
-    const savedBookmarks =
-      JSON.parse(localStorage.getItem("bookmarkedNews")) || [];
-
-    if (isBookmarked) {
-      // Remove bookmark
-      const updatedBookmarks = savedBookmarks.filter(
-        (item) => item._id !== news._id,
-      );
-
-      localStorage.setItem("bookmarkedNews", JSON.stringify(updatedBookmarks));
-
-      setIsBookmarked(false);
-    } else {
-      // Add bookmark
-      const updatedBookmarks = [...savedBookmarks, news];
-
-      localStorage.setItem("bookmarkedNews", JSON.stringify(updatedBookmarks));
-
-      setIsBookmarked(true);
-    }
+    setIsBookmarked(!isBookmarked);
   };
 
   // Share
@@ -101,7 +76,7 @@ const NewsCard = ({ news }) => {
                 ? "text-orange-500"
                 : "text-gray-500 hover:text-gray-800"
             }`}
-            title={isBookmarked ? "Remove Bookmark" : "Bookmark"}
+            title={isBookmarked ? "Bookmarked" : "Bookmark"}
           >
             {isBookmarked ? (
               <FaBookmark size={15} />
@@ -139,20 +114,17 @@ const NewsCard = ({ news }) => {
 
         {/* Details */}
         <div className="mt-4">
-          <p
-            className={`text-[12px] leading-5 text-gray-500 ${
-              !showMore ? "line-clamp-4" : ""
-            }`}
-          >
+          <p className="text-[12px] leading-5 text-gray-500 line-clamp-4">
             {details}
           </p>
 
-          <button
-            onClick={() => setShowMore(!showMore)}
+          {/* Read More - No functionality */}
+          <Link
+            to={`/news-details/${_id}`}
             className="text-orange-500 text-xs font-medium mt-1 hover:underline"
           >
-            {showMore ? "Read Less" : "Read More"}
-          </button>
+            Read More
+          </Link>
         </div>
 
         {/* Bottom Section */}
@@ -173,6 +145,7 @@ const NewsCard = ({ news }) => {
           {/* Views */}
           <div className="flex items-center gap-2 text-gray-500">
             <FaEye size={14} />
+
             <span className="text-xs">{total_view}</span>
           </div>
         </div>
